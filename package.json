@@ -1,0 +1,32 @@
+{
+  "name": "scratchinteract",
+  "version": "2.0.0",
+  "description": "A npm package to interact with the scratch website in several ways!",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/discordjs/discord.js.git"
+  },
+  "keywords": [
+    "scratch",
+    "interact",
+    "cloud",
+    "cloudhack",
+    "auto",
+    "comment",
+    "follow",
+    "love",
+    "create",
+    "delete",
+    "set"
+  ],
+  "author": "JanCantCode",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/discordjs/discord.js/issues"
+  },
+  "homepage": "https://github.com/discordjs/discord.js#readme"
+}
