@@ -1,6 +1,4 @@
-
 const request = require("request")
-const json = require("json")
 const ws = require("ws")
 
 module.exports = class Session {
@@ -8,10 +6,9 @@ module.exports = class Session {
         this.username = username
         this.password = password
         this.thing = ''
-
     }
 
-    scratchInteraction(interaction, value = '', value2 = '', value3 = '') {
+    scratchInteraction(interaction, value = '', value2 = '') {
         request.post({
             method: 'POST',
             url: 'https://scratch.mit.edu/login/',
@@ -66,11 +63,11 @@ module.exports = class Session {
                 if (value == '') {
                     throw("You did not give a project to comment on!")
                 } else {
-                if (value2 == '') {
-                    throw("You did not give a comment to send")
-                } else {
-                    this.project_comment(value, value2)
-                }
+                    if (value2 == '') {
+                        throw("You did not give a comment to send")
+                    } else {
+                        this.project_comment(value, value2)
+                    }
                 }
                 this.wrongInteraction = false
             }
@@ -104,7 +101,7 @@ module.exports = class Session {
 
             if (interaction == 'studio_comment') {
                 if (value == '') {
-                    throw("You did not give a Studio do comment in!")
+                    throw("You did not give a Studio to comment in!")
                 } else {
                     if (value2 == '') {
                         throw("You did not give anything to comment!")
@@ -152,8 +149,7 @@ module.exports = class Session {
             if (this.wrongInteraction == true) {
                 throw("The given interaction does not exist! (check <link> for more information about existing Interactions!)")
             }
-
-    })
+        })
     }
 
     love_project(projectid) {
@@ -170,9 +166,7 @@ module.exports = class Session {
                 'x-requested-with': 'XMLHttpRequest',
                 'x-token': this.usertoken
             }
-        }, (error, response, body) => {
-        }
-        )
+        }, (error, response, body) => {})
     }
 
     unlove_project(project) {
@@ -189,10 +183,7 @@ module.exports = class Session {
                 'x-requested-with': 'XMLHttpRequest',
                 'x-token': this.usertoken
             }
-        }, (error, response, body) => {
-        }
-        )
-        
+        }, (error, response, body) => {})
     }
 
     follow_user(user) {
@@ -209,8 +200,7 @@ module.exports = class Session {
                 'x-token': this.usertoken
             }
             
-        }, (error, response, body) => {
-        })
+        }, (error, response, body) => {})
     }
 
     unfollow_user(user) {
@@ -227,8 +217,7 @@ module.exports = class Session {
                 'x-token': this.usertoken
             }
             
-        }, (error, response, body) => {
-        })
+        }, (error, response, body) => {})
     }
 
     follow_studio(studio) {
@@ -244,7 +233,6 @@ module.exports = class Session {
                 'x-requested-with': 'XMLHttpRequest',
                 'x-token': this.usertoken
             }
-            
         })
     }
 
@@ -260,10 +248,9 @@ module.exports = class Session {
                 'referer': 'https://scratch.mit.edu',
                 'x-requested-with': 'XMLHttpRequest',
                 'x-token': this.usertoken
-                }
-                
-            })
-        }
+            }
+        })
+    }
 
     fav_project(project) {
         this.fav_cookie = 'scratchlanguage=en; scratchsessionsid=' + this.thing + '; scratchcsrftoken=' + this.crsftoken + ";" 
@@ -278,9 +265,7 @@ module.exports = class Session {
                 'x-requested-with': 'XMLHttpRequest',
                 'x-token': this.usertoken
             }
-        }, (error, response, body) => {
-        }
-        )
+        }, (error, response, body) => {})
     }
 
     unfav_project(project) {
@@ -296,9 +281,7 @@ module.exports = class Session {
                 'x-requested-with': 'XMLHttpRequest',
                 'x-token': this.usertoken
             }
-        }, (error, response, body) => {
-        }
-        )
+        }, (error, response, body) => {})
     }
 
     project_comment(project, text) {
@@ -364,8 +347,7 @@ module.exports = class Session {
                 "parent_id": "",
                 "commentee_id": ""
             }
-        }, (error, response, body) => {
-        })
+        }, (error, response, body) => {})
     }
 
     studio_invite(studio, username) {
@@ -381,7 +363,6 @@ module.exports = class Session {
                 'x-requested-with': 'XMLHttpRequest',
                 'x-token': this.usertoken
             }
-
         })
     }
 
@@ -399,7 +380,6 @@ module.exports = class Session {
                 'x-token': this.usertoken
             }
         })
-
     }
 
     post_view(project, project_owner) {
@@ -436,7 +416,6 @@ module.exports = class Session {
             },
             body: JSON.stringify({"username": username, "password": password})
         }, (error, response, body) => {
-            
             this.thing = (response.caseless.dict["set-cookie"])
             this.thing = this.thing[0].split(";").find(e=>e.startsWith("scratchsessionsid=")).split("=")[1]
             this.crsftoken = (response.caseless.dict["set-cookie"])
@@ -444,17 +423,16 @@ module.exports = class Session {
             this.usertoken = JSON.parse(body)[0].token
     
             const websocket = new ws("wss://clouddata.scratch.mit.edu/", [], {
-            headers: {
-                cookie: "scratchsessionsid=" + this.thing + ";",
-                origin: "https://scratch.mit.edu"
-            }
+                headers: {
+                    cookie: "scratchsessionsid=" + this.thing + ";",
+                    origin: "https://scratch.mit.edu"
+                }
+            })
+            websocket.addEventListener("open", () => {
+                websocket.send(`${JSON.stringify({name: "handshake", "user": username, "project_id": project})}\n`)
+                websocket.send((`${JSON.stringify({"method": method, "user": username, "project_id": project, "name": "☁ " + variable, "value": String(value)}
+                )}\n`))
+            })
         })
-        websocket.addEventListener("open", () => {
-            websocket.send(`${JSON.stringify({name: "handshake", "user": username, "project_id": project})}\n`)
-            websocket.send((`${JSON.stringify({"method": method,"user": username ,"project_id":project,"name":"☁ " + variable,"value":String(value)}
-            )}\n`))
-        })
-        })
-    
     }
 }
