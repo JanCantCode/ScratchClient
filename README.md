@@ -1,3 +1,9 @@
+# OUTDATED / DEPRECATED
+
+I made this almost 3 years ago and it was basically my first experience with code bigger than like 3 lines. The code in here couldnt be any more ugly + its written in js. half the api endpoints dont work anymore, and a lot of stuff has happened since then
+
+
+
 # ScratchClient
 A package for interacting with the [scratch website](https://scratch.mit.edu/)
 
